@@ -17,25 +17,28 @@ slack_client = WebClient(token=slack_api_token)
 cache = {}
 
 def sendMessage(text):
-   try:
-       response = slack_client.chat_postMessage(channel='#tgtg', text=text)
-   except SlackApiError as e:
-       print(f"Got an error: {e.response['error']}")
+    try:
+        response = slack_client.chat_postMessage(channel='#tgtg', text=text)
+    except SlackApiError as e:
+        print(f"Got an error: {e.response['error']}")
 
 while True:
-    items = tgtg_client.get_items()
+    try:
+        items = tgtg_client.get_items()
 
-    for item in items:
-        if item["items_available"] == 0:
-            continue
-        id = item["item"]["item_id"] + item["purchase_end"]
-        if id in cache and cache[id]:
-            continue
-        cache[id] = True
-        bag = "bag"
-        if item["items_available"] > 1:
-            bag = "bags"
-        msg = "{} {} available at {}\n".format(item["items_available"], bag, item["display_name"])
-        msg += "Pickup time: {} to {}".format(item["pickup_interval"]["start"], item["pickup_interval"]["end"])
-        sendMessage(msg)
+        for item in items:
+            if item["items_available"] == 0:
+                continue
+            id = item["item"]["item_id"] + item["purchase_end"]
+            if id in cache and cache[id]:
+                continue
+            cache[id] = True
+            bag = "bag"
+            if item["items_available"] > 1:
+                bag = "bags"
+            msg = "{} {} available at {}\n".format(item["items_available"], bag, item["display_name"])
+            msg += "Pickup time: {} to {}".format(item["pickup_interval"]["start"], item["pickup_interval"]["end"])
+            sendMessage(msg)
+    except Exception as e:
+        print(f"Got an error: {e}")
     time.sleep(30)
