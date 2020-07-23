@@ -27,12 +27,11 @@ while True:
         items = tgtg_client.get_items()
 
         for item in items:
-            if item["items_available"] == 0:
+            id = item["item"]["item_id"]
+            if id in cache and cache[id] <= item["items_available"]:
+                cache[id] = item["items_available"]
                 continue
-            id = item["item"]["item_id"] + item["purchase_end"]
-            if id in cache and cache[id]:
-                continue
-            cache[id] = True
+            cache[id] = item["items_available"]
             bag = "bag"
             if item["items_available"] > 1:
                 bag = "bags"
