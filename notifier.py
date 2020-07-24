@@ -28,7 +28,7 @@ while True:
 
         for item in items:
             id = item["item"]["item_id"]
-            if id in cache and cache[id] <= item["items_available"]:
+            if id in cache and cache[id] >= item["items_available"]:
                 cache[id] = item["items_available"]
                 continue
             cache[id] = item["items_available"]
