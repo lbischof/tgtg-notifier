@@ -31,9 +31,9 @@ while True:
             if id in cache and cache[id] <= item["items_available"]:
                 cache[id] = item["items_available"]
                 continue
+            cache[id] = item["items_available"]
             if item["items_available"] == 0:
                 continue
-            cache[id] = item["items_available"]
             bag = "bag"
             if item["items_available"] > 1:
                 bag = "bags"
